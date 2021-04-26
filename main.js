@@ -1,6 +1,7 @@
 $(function(){
 $("#showNum").hide()
 $("#input").hide()
+$("#restart").hide()
 
 var min = parseInt(prompt("Inserisci un numero(MIN)"))
 var max = parseInt(prompt("Inserisci un numero(MAX)"))
@@ -10,6 +11,7 @@ var max = parseInt(prompt("Inserisci un numero(MAX)"))
 var quantity = 5; // QUANTI NUMERI DA INDOVINARE
 
 var generatedArray = [];
+
 var userArray = [];
 
 $("#numGen").click(function(){
@@ -20,6 +22,8 @@ $("#numGen").click(function(){
 })
 
 $("#showNum").click(function(){
+  $("#generated").text('')
+  $("#generated").show()
   for(var a =0; a<generatedArray.length;a++){
     $("#generated").append(generatedArray[a] +" ")
   }
@@ -28,6 +32,15 @@ $("#showNum").click(function(){
     $("#showNum").hide()
     $("#input").show()
   },5000)
+})
+
+$("#restart").click(function(){
+  $(this).hide();
+  $("#numGen").show();
+  $("#result").hide();
+  userArray.length =0;
+  tries=0;
+  limit = false;
 })
 
 // USER ACTIONS
@@ -46,11 +59,18 @@ $("#showNum").click(function(){
         tries++
       }
       if(tries>quantity-1){
+        $("#result").text('');
+        $("#result").show();
         limit=true;
         $("#input").hide();
-        var correct = checkEquals(generatedArray,userArray)
-        var displayString = "Ne hai trovati: "+correct
-        $("#result").text(displayString)
+        $("#result").text("Calcolo in corso...")
+        setTimeout(function(){
+          var correct = checkEquals(generatedArray,userArray)
+          var displayString = "Ne hai trovati: "+correct
+          $("#result").text(displayString)
+          $("#restart").show()
+        },3000)
+        
       }
     }
   })
@@ -61,11 +81,11 @@ function genNum(min,max){ // MIN NON COMPRESO
 }
 
 function genArray(array,size){
-  
+  array.length = 0; 
   for(var i=0; i<size;i++){
     var createdNumber = genNum(min,max)
-    if(!(generatedArray.includes(createdNumber))){
-      generatedArray.push(createdNumber)
+    if(!(array.includes(createdNumber))){
+      array.push(createdNumber)
     } else i--
   }
 }
